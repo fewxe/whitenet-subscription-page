@@ -3,7 +3,7 @@ from typing import Any
 from loguru import logger
 
 from src.domain.exceptions import SubscriptionProviderResponseError
-from src.domain.models import SubscriptionInfo, SubscriptionUser, UserStatus
+from src.domain.models import SubscriptionInfo, SubscriptionUser, TrafficLimitStrategy, UserStatus
 
 
 def parse_subscription_info(payload: dict[str, Any], short_uuid: str) -> SubscriptionInfo:
@@ -14,6 +14,7 @@ def parse_subscription_info(payload: dict[str, Any], short_uuid: str) -> Subscri
         user: SubscriptionUser | None = None
         if raw_user:
             user = SubscriptionUser(
+                short_uuid=raw_user["shortUuid"],
                 username=raw_user["username"],
                 days_left=raw_user["daysLeft"],
                 is_active=raw_user["isActive"],
@@ -23,6 +24,9 @@ def parse_subscription_info(payload: dict[str, Any], short_uuid: str) -> Subscri
                 traffic_limit=raw_user["trafficLimit"],
                 traffic_used_bytes=int(raw_user["trafficUsedBytes"]),
                 traffic_limit_bytes=int(raw_user["trafficLimitBytes"]),
+                lifetime_traffic_used=raw_user["lifetimeTrafficUsed"],
+                lifetime_traffic_used_bytes=int(raw_user["lifetimeTrafficUsedBytes"]),
+                traffic_limit_strategy=TrafficLimitStrategy(raw_user["trafficLimitStrategy"]),
             )
 
         return SubscriptionInfo(
