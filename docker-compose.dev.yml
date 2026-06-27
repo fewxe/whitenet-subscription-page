@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: whitenet-subscription
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
