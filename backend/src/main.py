@@ -1,6 +1,7 @@
 from dishka import make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from src.api import get_routers
 from src.api.middlewares import no_robots_middleware
@@ -20,6 +21,7 @@ def get_app() -> FastAPI:
         openapi_url="/openapi.json" if config.debug else None,
     )
     fastapi_app.middleware("http")(no_robots_middleware)
+    fastapi_app.mount("/assets", StaticFiles(directory=config.frontend_assets), name="assets")
     fastapi_app.include_router(*get_routers())
     setup_dishka(container, fastapi_app)
 

@@ -4,7 +4,7 @@ import httpx
 from dishka import Provider, Scope, provide, provide_all
 
 from src.application.ports import SubscriptionGateway
-from src.application.use_cases import GetSubscriptionInfo, ResolveEntrypoint
+from src.application.use_cases import GetSubscription, GetSubscriptionInfo
 from src.infrastructure.remnawave_gateway import RemnawaveGateway
 from src.setup.config import AppConfig, config
 
@@ -32,7 +32,7 @@ class UseCaseProvider(Provider):
 
     use_cases = provide_all(
         GetSubscriptionInfo,
-        ResolveEntrypoint,
+        GetSubscription,
     )
 
 

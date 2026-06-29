@@ -8,8 +8,6 @@ from src.domain.exceptions import (
     SubscriptionProviderUnavailableError,
 )
 from src.domain.models import SubscriptionInfo
-from src.domain.services import is_browser
-from src.setup.config import AppConfig
 
 
 class GetSubscriptionInfo:
@@ -30,19 +28,11 @@ class GetSubscriptionInfo:
         return info
 
 
-class ResolveEntrypoint:
-    def __init__(self, gateway: SubscriptionGateway, settings: AppConfig):
+class GetSubscription:
+    def __init__(self, gateway: SubscriptionGateway):
         self.gateway = gateway
-        self.frontend_base_url = settings.frontend_base_url
 
-    async def execute(
-        self, short_uuid: str, headers: dict[str, str]
-    ) -> str | RawSubscriptionPayload:
-
-        if is_browser(headers.get("user-agent", "")):
-            logger.debug(f"Browser request for short_uuid={short_uuid}, redirecting to frontend")
-            return f"{self.frontend_base_url}/{short_uuid}"
-
+    async def execute(self, short_uuid: str, headers: dict[str, str]) -> RawSubscriptionPayload:
         logger.info(
             f"Subscription requested: short_uuid={short_uuid}, "
             f"ip={headers.get('x-remnawave-real-ip', '-')}, "
@@ -54,7 +44,5 @@ class ResolveEntrypoint:
         try:
             return await self.gateway.fetch_subscription(short_uuid, headers=headers)
         except SubscriptionProviderUnavailableError:
-            logger.error(
-                f"Provider unavailable while proxying subscription for short_uuid={short_uuid}"
-            )
+            logger.error(f"Provider unavailable while proxying subscription for short_uuid={short_uuid}")
             raise
