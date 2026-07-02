@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: .
+    container_name: whitenet-subscription-page
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    networks:
+            - remnawave-network
+
+networks:
+    remnawave-network:
+        driver: bridge
+        external: true
