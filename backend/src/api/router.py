@@ -12,7 +12,7 @@ from src.domain.exceptions import (
     SubscriptionProviderResponseError,
     SubscriptionProviderUnavailableError,
 )
-from src.domain.services import extract_client_ip, filter_forwarded_headers, is_browser
+from src.domain.services import extract_client_ip, filter_forwarded_headers, is_vpn_client
 from src.setup.config import AppConfig
 
 router = APIRouter(route_class=DishkaRoute)
@@ -33,7 +33,7 @@ async def entrypoint(
     raw_headers = dict(request.headers)
     headers = filter_forwarded_headers(raw_headers)
 
-    if is_browser(headers.get("user-agent", "")):
+    if not is_vpn_client(headers.get("user-agent", "")):
         logger.debug(f"Browser request for short_uuid={short_uuid}, serving frontend")
         return FileResponse(config.frontend_index)
 

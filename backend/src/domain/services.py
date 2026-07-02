@@ -1,24 +1,72 @@
 IGNORED_HEADERS = frozenset({
-    "accept-encoding", "alt-svc", "authorization", "cache-control",
-    "cf-access-client-id", "cf-access-client-secret", "cf-cache-status",
-    "cf-connecting-ip", "cf-ray", "connection", "content-length",
-    "content-security-policy", "cross-origin-opener-policy",
-    "cross-origin-resource-policy", "expires", "fastly-client-ip",
-    "forwarded", "forwarded-for", "host", "keep-alive", "nel",
-    "origin-agent-cluster", "pragma", "proxy-authenticate",
-    "proxy-authorization", "report-to", "server", "te", "trailer",
-    "transfer-encoding", "true-client-ip", "upgrade", "x-api-key",
-    "x-client-ip", "x-cluster-client-ip", "x-forwarded", "x-forwarded-for",
-    "x-forwarded-proto", "x-forwarded-scheme", "x-real-ip",
-    "x-remnawave-client-type", "x-remnawave-real-ip", "x-subpage-version",
+    "accept-encoding",
+    "alt-svc",
+    "authorization",
+    "cache-control",
+    "cf-access-client-id",
+    "cf-access-client-secret",
+    "cf-cache-status",
+    "cf-connecting-ip",
+    "cf-ray",
+    "connection",
+    "content-length",
+    "content-security-policy",
+    "cross-origin-opener-policy",
+    "cross-origin-resource-policy",
+    "expires",
+    "fastly-client-ip",
+    "forwarded",
+    "forwarded-for",
+    "host",
+    "keep-alive",
+    "nel",
+    "origin-agent-cluster",
+    "pragma",
+    "proxy-authenticate",
+    "proxy-authorization",
+    "report-to",
+    "server",
+    "te",
+    "trailer",
+    "transfer-encoding",
+    "true-client-ip",
+    "upgrade",
+    "x-api-key",
+    "x-client-ip",
+    "x-cluster-client-ip",
+    "x-forwarded",
+    "x-forwarded-for",
+    "x-forwarded-proto",
+    "x-forwarded-scheme",
+    "x-real-ip",
+    "x-remnawave-client-type",
+    "x-remnawave-real-ip",
+    "x-subpage-version",
 })
 
-_BROWSER_MARKERS = ("mozilla", "chrome", "safari", "firefox", "edg/")
+_VPN_CLIENT_MARKERS = (
+    "v2rayn",
+    "v2rayng",
+    "v2raytun",
+    "clash",
+    "sing-box",
+    "happ",
+    "streisand",
+    "foxray",
+    "shadowrocket",
+    "nekoray",
+    "nekobox",
+    "stash",
+    "flclash",
+    "mihomo",
+    "incy",
+    "prizrak",
+)
 
 
-def is_browser(user_agent: str) -> bool:
+def is_vpn_client(user_agent: str) -> bool:
     ua = user_agent.lower()
-    return any(m in ua for m in _BROWSER_MARKERS)
+    return any(m in ua for m in _VPN_CLIENT_MARKERS)
 
 
 def filter_forwarded_headers(headers: dict[str, str]) -> dict[str, str]:
