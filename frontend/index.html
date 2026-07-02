@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="stylesheet" href="./assets/starfield/starfield.css" />
+    <link rel="stylesheet" href="./assets/app/app.css" />
+    <link rel="stylesheet" href="./assets/app/header.css" />
+    <link rel="stylesheet" href="./assets/app/glass-panel.css" />
+    <link rel="stylesheet" href="./assets/app/user-status/user-status.css" />
+    <link rel="stylesheet" href="./assets/app/platform.css" />
+    <link rel="stylesheet" href="./assets/app/vpn-client.css" />
+    <link rel="stylesheet" href="./assets/app/guide.css" />
+    <link rel="stylesheet" href="./assets/app/footer.css" />
+    <link rel="stylesheet" href="./assets/app/responsive.css" />
+    <link rel="stylesheet" href="./assets/app/QR/QR-modal.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+
+    <div class="vignette"></div>
+
+    <div class="modal-overlay" id="qrModal">
+      <div class="modal-box">
+        <div id="qrContainer"></div>
+        <h3>QR‑код подписки</h3>
+        <p>
+          Отсканируйте в клиенте для быстрого подключения. Или скопируйте ссылку ниже и вставьте в
+          клиент
+        </p>
+        <button class="modal-close copy-sub-link" id="copySubLink">Копировать ссылку</button>
+        <p hidden class="copy-sub-alert" id="copyAlert">Скопировано!</p>
+        <button class="modal-close" id="qrClose">Закрыть</button>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="container">
+        <header class="header">
+          <a class="logo no-select">
+            <span class="logo-icon"
+              ><img
+                class="logo-img"
+                src="./assets/img/image_2026-07-03_00-02-43.png"
+                alt="whitenet_logo"
+            /></span>
+            WhiteNet
+          </a>
+          <div class="header-actions">
+            <button class="header-btn" id="qrBtn" aria-label="QR-код">
+              <span>⊞</span>
+              <span class="tooltip">QR‑код</span>
+            </button>
+            <button class="header-btn" id="supportBtn" aria-label="Поддержка">
+              <span>♡</span>
+              <span class="tooltip">Поддержка</span>
+            </button>
+          </div>
+        </header>
+
+        <section class="glass-panel">
+          <div class="panel-content">
+            <div class="status-top">
+              <div class="status-user">
+                <div class="avatar" id="avatar">Y</div>
+                <div class="user-info">
+                  <span class="user-name" id="userName">You</span>
+                </div>
+              </div>
+              <div class="status-badge">
+                <span class="dot" id="dot"></span>
+                <span id="status">Статус подписки</span>
+              </div>
+            </div>
+
+            <div class="status-details">
+              <div class="detail-item">
+                <span class="detail-label"
+                  >Осталось дней (до <span id="expiryDate">dd.mm.yyyy</span>)</span
+                >
+                <span class="detail-value" id="expiredIn">N</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Трафик</span>
+                <span class="detail-value"
+                  ><span class="traffic-used" id="trafficUsed">0</span> /
+                  <span id="trafficLimit">N GiB</span></span
+                >
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <div>
+              <div class="section-title">Платформа</div>
+              <div class="platform-group" id="platformGroup"></div>
+            </div>
+
+            <div>
+              <div class="section-title">Клиент</div>
+              <div class="client-grid" id="clientGrid"></div>
+            </div>
+
+            <div>
+              <div class="section-title">Инструкция для установки</div>
+              <div class="instruction-block" id="instructionBlock"></div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span>powered by</span>
+          <span class="brand">WhiteNet</span>
+          <span class="heart">❤️</span>
+        </footer>
+      </div>
+    </div>
+
+    <script src="./assets/starfield/starfield.js"></script>
+    <script src="./assets/app/user-status/user-status.js" type="module"></script>
+    <script src="./assets/app/choose-platform&client.js" type="module"></script>
+    <script src="./assets/libs/qr-code-styling-1.9.2/package/lib/qr-code-styling.js"></script>
+    <script src="./assets/app/QR/QR-modal.js" type="module"></script>
+  </body>
+</html>

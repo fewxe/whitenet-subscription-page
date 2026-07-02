@@ -1,0 +1,31 @@
+.client-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.client-tag {
+  padding: 6px 16px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.client-tag:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.client-tag.active {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.02);
+}
