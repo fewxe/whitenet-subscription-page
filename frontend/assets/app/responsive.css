@@ -92,8 +92,6 @@
     font-size: 13px;
   }
   .platform-group {
-    flex-wrap: nowrap;
-    overflow-x: auto;
     padding-bottom: 4px;
   }
   .footer {

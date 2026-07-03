@@ -2,6 +2,7 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .platform-btn {
@@ -28,18 +29,4 @@
   border-color: rgba(255, 255, 255, 0.15);
   color: #fff;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.02);
-}
-
-.platform-group::-webkit-scrollbar {
-  height: 4px;
-}
-.platform-group::-webkit-scrollbar-track {
-  background: transparent;
-}
-.platform-group::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-}
-.platform-group::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.1);
 }

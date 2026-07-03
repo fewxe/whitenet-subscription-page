@@ -61,7 +61,7 @@ function createInstructionBlock() {
   addSubLink.id = "addLink";
   addSubLink.style.marginTop = "12px";
   addSubLink.href = currentClientInfo.addLink;
-  addSubLink.innerHTML = '<span class="icon">⊕</span> Добавить подписку';
+  addSubLink.innerHTML = '<span class="icon">+</span> Добавить подписку';
   container.appendChild(addSubLink);
 }
 
@@ -89,6 +89,25 @@ function updateInstruction() {
   }
 }
 
+function createAppLinks(apps, appLinksContainer) {
+  appLinksContainer.innerHTML = "";
+  apps.forEach((app) => {
+    const appLink = document.createElement("a");
+    appLink.className = "inst-link";
+    appLink.download = true;
+    appLink.href = app.download;
+    appLink.innerHTML = `<span class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-download">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M20 16a1 1 0 0 1 1 1v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-2a1 1 0 0 1 2 0v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-2a1 1 0 0 1 1 -1m-8 -13a1 1 0 0 1 1 1v9.585l3.293 -3.292a1 1 0 0 1 1.414 1.414l-5 5a1 1 0 0 1 -.09 .08l.09 -.08a1 1 0 0 1 -.674 .292l-.033 .001h-.032l-.054 -.004l.086 .004a1 1 0 0 1 -.617 -.213a1 1 0 0 1 -.09 -.08l-5 -5a1 1 0 0 1 1.414 -1.414l3.293 3.292v-9.585a1 1 0 0 1 1 -1" />
+      </svg>
+    </span> ${app.title}`;
+    appLinksContainer.appendChild(appLink);
+  });
+
+  return appLinksContainer;
+}
+
 function createClients() {
   clientGridElem.innerHTML = "";
   const currentPlatformClients = Object.keys(instructions[currentPlatform]);
@@ -108,20 +127,6 @@ function createClients() {
 
     clientGridElem.appendChild(clientElem);
   });
-}
-
-function createAppLinks(apps, appLinksContainer) {
-  appLinksContainer.innerHTML = "";
-  apps.forEach((app) => {
-    const appLink = document.createElement("a");
-    appLink.className = "inst-link";
-    appLink.download = true;
-    appLink.href = app.download;
-    appLink.innerHTML = `<span class="icon">⬇</span> ${app.title}`;
-    appLinksContainer.appendChild(appLink);
-  });
-
-  return appLinksContainer;
 }
 
 platformBtns.forEach((btn) => {

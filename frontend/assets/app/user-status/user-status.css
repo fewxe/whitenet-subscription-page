@@ -71,19 +71,19 @@
   }
 
   .active-dot {
-    background: #6b8c7c;
+    background: #00ff66;
   }
 
   .expired-dot {
-    background: #bd6a60;
+    background: #ff3333;
   }
 
   .limited-dot {
-    background: #d4a35c;
+    background: #ffcc00;
   }
 
   .disabled-dot {
-    background: #d1d5db;
+    background: #ffffff;
   }
 }
 
