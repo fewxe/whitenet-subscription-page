@@ -39,3 +39,10 @@ body {
   pointer-events: none;
   background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
 }
+
+button, /* можно применить ко всем кнопкам на сайте */
+a {
+  /* и ко всем ссылкам */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none; /* убирает контекстное меню при долгом тапе (опционально) */
+}
