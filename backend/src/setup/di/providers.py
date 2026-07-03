@@ -3,6 +3,7 @@ from collections.abc import AsyncIterable
 import httpx
 from dishka import Provider, Scope, provide, provide_all
 
+from src.api.page_renderer import PageRenderer
 from src.application.ports import SubscriptionGateway
 from src.application.use_cases import GetSubscription, GetSubscriptionInfo
 from src.infrastructure.remnawave_gateway import RemnawaveGateway
@@ -42,3 +43,11 @@ class AppConfigProvider(Provider):
     @provide
     def config(self) -> AppConfig:
         return config
+
+
+class PageRendererProvider(Provider):
+    scope = Scope.APP
+
+    @provide
+    def page_renderer(self, config: AppConfig) -> PageRenderer:
+        return PageRenderer(config.frontend_index)

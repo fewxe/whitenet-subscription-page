@@ -1,6 +1,12 @@
 from dishka import Provider
 
-from src.setup.di.providers import AppConfigProvider, GatewayProvider, HttpClientProvider, UseCaseProvider
+from src.setup.di.providers import (
+    AppConfigProvider,
+    GatewayProvider,
+    HttpClientProvider,
+    PageRendererProvider,
+    UseCaseProvider,
+)
 
 
 def get_providers() -> list[Provider]:
@@ -9,4 +15,5 @@ def get_providers() -> list[Provider]:
         HttpClientProvider(),
         GatewayProvider(),
         UseCaseProvider(),
+        PageRendererProvider(),
     ]
