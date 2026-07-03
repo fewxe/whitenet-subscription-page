@@ -640,7 +640,6 @@ async function getInstructions() {
     await convertInstructionForWindowsTelegramMiniApp(instructions);
   }
 
-  convertInstructionForWindowsTelegramMiniApp(instructions);
   return instructions;
 }
 
