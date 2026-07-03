@@ -142,7 +142,7 @@ async function getInstructions() {
   const userData = await getUser();
   const subUrl = userData.subscription_url;
   const username = userData.user.username;
-  return {
+  const instructions = {
     ios: {
       incy: {
         title: "IOS / Incy",
@@ -216,6 +216,22 @@ async function getInstructions() {
       },
     },
     android: {
+      incy: {
+        title: "Android / INCY",
+        desc: "Скачайте INCY для Android. Установите и используйте ссылку для добавления подписки.",
+        apps: [
+          {
+            title: "Google Play",
+            download: "https://play.google.com/store/apps/details?id=llc.itdev.incy",
+          },
+          {
+            title: "Скачать APK",
+            download:
+              "https://github.com/INCY-DEV/incy-platforms/releases/latest/download/Incy.apk",
+          },
+        ],
+        addLink: `incy://add/${subUrl}`,
+      },
       happ: {
         title: "Android / Happ",
         desc: "Скачайте Happ Client для Android. Установите и используйте ссылку для добавления подписки.",
@@ -535,6 +551,22 @@ async function getInstructions() {
       },
     },
     androidtv: {
+      incy: {
+        title: "Android / INCY",
+        desc: "Скачайте INCY для Android. Установите и используйте ссылку для добавления подписки.",
+        apps: [
+          {
+            title: "Google Play",
+            download: "https://play.google.com/store/apps/details?id=llc.itdev.incy",
+          },
+          {
+            title: "Скачать APK",
+            download:
+              "https://github.com/INCY-DEV/incy-platforms/releases/latest/download/Incy.apk",
+          },
+        ],
+        addLink: `incy://add/${subUrl}`,
+      },
       happ: {
         title: "Android TV / Happ",
         desc: "Скачайте Happ Client для Android TV. Подробные инструкции, чтобы помочь вам настроить Happ на вашем устройстве: https://www.happ.su/main/ru/faq/android-tv или https://www.happ.su/main/faq/android-tv",
@@ -603,4 +635,43 @@ async function getInstructions() {
       },
     },
   };
+
+  if (isTelegramMiniAppOnWindows()) {
+    await convertInstructionForWindowsTelegramMiniApp(instructions);
+  }
+
+  convertInstructionForWindowsTelegramMiniApp(instructions);
+  return instructions;
+}
+
+function isTelegramMiniAppOnWindows() {
+  // 1. Проверяем, что страница открыта внутри Telegram Mini App
+  // (Телеграм всегда внедряет объект Telegram.WebApp в окно браузера)
+  const isTelegram =
+    typeof window !== "undefined" &&
+    window.Telegram &&
+    window.Telegram.WebApp &&
+    window.Telegram.WebApp.initData !== "";
+
+  // 2. Проверяем, что операционная система — Windows
+  // Используем современный userAgentData, если он есть, иначе старый userAgent
+  let isWindows = false;
+  if (navigator.userAgentData) {
+    isWindows = navigator.userAgentData.platform === "Windows";
+  } else {
+    isWindows = navigator.userAgent.toLowerCase().includes("win");
+  }
+
+  // Возвращаем true, только если выполнены оба условия
+  return isTelegram && isWindows;
+}
+
+async function convertInstructionForWindowsTelegramMiniApp(instructions) {
+  const addLinkPrefix = (await getUser()).pageCfg.subscriptionUrl;
+  Object.keys(instructions).forEach((platform) => {
+    Object.keys(instructions[platform]).forEach((client) => {
+      instructions[platform][client].addLink =
+        `${addLinkPrefix}${instructions[platform][client].addLink}`;
+    });
+  });
 }

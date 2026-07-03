@@ -35,7 +35,7 @@ const date = new Date(user.expires_at);
 const dayMonth = date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
 const year = date.getFullYear();
 const expiryDateElem = document.getElementById("expiryDate");
-expiryDateElem.textContent = `${dayMonth}, ${year}`;
+expiryDateElem.textContent = `до ${dayMonth}, ${year}`;
 
 const expiredInElem = document.getElementById("expiredIn");
 expiredInElem.textContent = user.days_left.toString();

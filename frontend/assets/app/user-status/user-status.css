@@ -48,6 +48,14 @@
   font-weight: 400;
 }
 
+.status-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
 .status-badge {
   padding: 4px 14px;
   border-radius: 40px;
@@ -98,7 +106,7 @@
 .detail-item {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 5px;
 }
 
 .detail-label {
@@ -110,7 +118,7 @@
 }
 
 .detail-value {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-primary);
   letter-spacing: -0.1px;

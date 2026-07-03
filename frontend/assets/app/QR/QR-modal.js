@@ -69,8 +69,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeQR();
 });
 
-document.getElementById("supportBtn").addEventListener("click", () => {
-  window.open("https://t.me/whitenetsupport", "_blank");
+document.getElementById("supportBtn").addEventListener("click", async () => {
+  window.open((await getUser()).pageCfg.supportUrl, "_blank");
 });
 
 const copyAlertElem = document.getElementById("copyAlert");

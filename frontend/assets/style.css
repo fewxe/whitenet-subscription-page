@@ -40,9 +40,23 @@ body {
   background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
 }
 
-button, /* можно применить ко всем кнопкам на сайте */
+button,
+input,
+select,
+textarea,
 a {
+  /* 1. Убираем голубую рамку фокуса */
   /* и ко всем ссылкам */
-  -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none; /* убирает контекстное меню при долгом тапе (опционально) */
+  outline: none !important;
+
+  /* 2. Дополнительно для старых версий Android-браузеров */
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Также убираем фокус при навигации (для полной уверенности) */
+button:focus,
+button:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
