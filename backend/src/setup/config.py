@@ -26,9 +26,13 @@ class AppConfig(BaseSettings):
     def frontend_assets(self) -> Path:
         return FRONTEND_DIR / self.frontend_assets_path
 
+    support_url: AnyHttpUrl
+    redirect_base_url: AnyHttpUrl
+
     model_config = SettingsConfigDict(
         env_file=find_dotenv(),
         env_file_encoding="utf-8",
     )
+
 
 config = AppConfig()

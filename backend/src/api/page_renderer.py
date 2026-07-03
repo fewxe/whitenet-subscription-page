@@ -1,16 +1,20 @@
 import base64
 import json
-from pathlib import Path
 
 from loguru import logger
 
 from src.api.mappers import to_subscription_info_out
 from src.domain.models import SubscriptionInfo
+from src.setup.config import AppConfig
 
 
 class PageRenderer:
-    def __init__(self, index_path: Path) -> None:
-        self._index_path = index_path
+    def __init__(self, config: AppConfig) -> None:
+        self._index_path = config.frontend_index
+        self._page_config = {
+            "supportUrl": str(config.support_url),
+            "subscriptionUrl": str(config.redirect_base_url),
+        }
         self._template: str | None = None
 
     def _load_template(self) -> str:
@@ -34,5 +38,10 @@ class PageRenderer:
                 json.dumps(to_subscription_info_out(info).model_dump()).encode()
             ).decode()
 
-        script = f"<script>window.__PANEL_DATA__ = {json.dumps(panel_data)};</script>"
+        script = (
+            f"<script>"
+            f"window.__PANEL_DATA__ = {json.dumps(panel_data)};"
+            f"window.__PAGE_CONFIG__ = {json.dumps(self._page_config)};"
+            f"</script>"
+        )
         return template.replace("</head>", f"{script}\n</head>", 1)

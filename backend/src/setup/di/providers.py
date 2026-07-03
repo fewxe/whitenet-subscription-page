@@ -48,6 +48,4 @@ class AppConfigProvider(Provider):
 class PageRendererProvider(Provider):
     scope = Scope.APP
 
-    @provide
-    def page_renderer(self, config: AppConfig) -> PageRenderer:
-        return PageRenderer(config.frontend_index)
+    page_renderer = provide(PageRenderer)
