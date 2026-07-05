@@ -12,3 +12,4 @@ wheels/
 .env
 
 example.html
+frpc-command.txt

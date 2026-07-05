@@ -60,7 +60,7 @@ function createInstructionBlock() {
   addSubLink.className = "inst-link";
   addSubLink.id = "addLink";
   addSubLink.style.marginTop = "12px";
-  addSubLink.href = currentClientInfo.addLink;
+  setLink(addSubLink, currentClientInfo.addLink);
   addSubLink.innerHTML = '<span class="icon">+</span> Добавить подписку';
   container.appendChild(addSubLink);
 }
@@ -79,7 +79,8 @@ function updateInstruction() {
   if (client) {
     instTitle.textContent = client.title;
     instDesc.textContent = client.desc;
-    addLink.href = client.addLink;
+    addLink.removeEventListener(type, listener);
+    setLink(addLink, client.addLink);
 
     instDesc.insertAdjacentElement("afterend", createAppLinks(currentClientInfo.apps, appLinks));
   } else {
@@ -636,35 +637,28 @@ async function getInstructions() {
     },
   };
 
-  if (isTelegramMiniAppOnWindows()) {
+  if (isTelegramMiniApp() && isWindowsOS())
     await convertInstructionForWindowsTelegramMiniApp(instructions);
-  }
 
   return instructions;
 }
 
-function isTelegramMiniAppOnWindows() {
-  // 1. Проверяем, что страница открыта внутри Telegram Mini App
-  // (Телеграм всегда внедряет объект Telegram.WebApp в окно браузера)
-  const isTelegram =
+function isTelegramMiniApp() {
+  return (
     typeof window !== "undefined" &&
     window.Telegram &&
     window.Telegram.WebApp &&
-    window.Telegram.WebApp.initData !== "";
-
-  // 2. Проверяем, что операционная система — Windows
-  // Используем современный userAgentData, если он есть, иначе старый userAgent
-  let isWindows = false;
-  if (navigator.userAgentData) {
-    isWindows = navigator.userAgentData.platform === "Windows";
-  } else {
-    isWindows = navigator.userAgent.toLowerCase().includes("win");
-  }
-
-  // Возвращаем true, только если выполнены оба условия
-  return isTelegram && isWindows;
+    window.Telegram.WebApp.initData !== ""
+  );
 }
 
+function isWindowsOS() {
+  if (navigator.userAgentData) {
+    return navigator.userAgentData.platform === "Windows";
+  } else {
+    return navigator.userAgent.toLowerCase().includes("win");
+  }
+}
 async function convertInstructionForWindowsTelegramMiniApp(instructions) {
   const addLinkPrefix = (await getUser()).pageCfg.subscriptionUrl;
   Object.keys(instructions).forEach((platform) => {
@@ -673,4 +667,29 @@ async function convertInstructionForWindowsTelegramMiniApp(instructions) {
         `${addLinkPrefix}${instructions[platform][client].addLink}`;
     });
   });
+}
+
+// function setLink(linkElem, link) {
+//   if (isTelegramMiniApp()) {
+//     linkElem.onclick = function (ev) {
+//       ev.preventDefault();
+
+//       const secureRedirectUrl = link.replace("incy://", "https://whitenet.online");
+
+//       window.Telegram.WebApp.openLink(secureRedirectUrl);
+//     };
+//   } else {
+//     linkElem.href = link;
+//   }
+// }
+
+function setLink(linkElem, link) {
+  if (isTelegramMiniApp()) {
+    linkElem.onclick = function (ev) {
+      ev.preventDefault();
+      window.Telegram.WebApp.openLink(link, { try_instant_view: false });
+    };
+  } else {
+    linkElem.href = link;
+  }
 }
