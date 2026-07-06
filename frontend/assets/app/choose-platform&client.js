@@ -1,8 +1,17 @@
 import getUser from "./get-user.js";
 
+const platformAlias = {
+  ios: "IOS",
+  android: "Android",
+  linux: "Linux",
+  macos: "macOS",
+  windows: "Windows",
+  androidtv: "Android TV",
+  appletv: "Apple TV",
+};
 const instructions = await getInstructions();
-let currentPlatform = "ios";
-let currentClient = "incy";
+let currentPlatform = getPlatform();
+let currentClient = initCurrentClient(instructions, currentPlatform, "incy");
 let currentClientInfo = instructions[currentPlatform][currentClient];
 const platforms = Object.keys(instructions);
 
@@ -15,15 +24,6 @@ createInstructionBlock();
 
 function createPlatforms() {
   const platformGroupElem = document.getElementById("platformGroup");
-  const platformAlias = {
-    ios: "IOS",
-    android: "Android",
-    linux: "Linux",
-    macos: "macOS",
-    windows: "Windows",
-    androidtv: "Android TV",
-    appletv: "Apple TV",
-  };
 
   platforms.forEach((platform) => {
     const platformElem = document.createElement("button");
@@ -73,13 +73,13 @@ const appLinks = document.getElementById("instLinks");
 const addLink = document.getElementById("addLink");
 
 function updateInstruction() {
-  const client = instructions[currentPlatform] && instructions[currentPlatform][currentClient];
-  currentClientInfo = instructions[currentPlatform][currentClient];
   createClients();
+
+  const client = instructions[currentPlatform] && instructions[currentPlatform][currentClient];
   if (client) {
+    currentClientInfo = instructions[currentPlatform][currentClient];
     instTitle.textContent = client.title;
     instDesc.textContent = client.desc;
-    addLink.removeEventListener(type, listener);
     setLink(addLink, client.addLink);
 
     instDesc.insertAdjacentElement("afterend", createAppLinks(currentClientInfo.apps, appLinks));
@@ -661,35 +661,61 @@ function isWindowsOS() {
 }
 async function convertInstructionForWindowsTelegramMiniApp(instructions) {
   const addLinkPrefix = (await getUser()).pageCfg.subscriptionUrl;
-  Object.keys(instructions).forEach((platform) => {
-    Object.keys(instructions[platform]).forEach((client) => {
-      instructions[platform][client].addLink =
-        `${addLinkPrefix}${instructions[platform][client].addLink}`;
-    });
+  const windowsPlatform = instructions.windows;
+  Object.keys(windowsPlatform).forEach((client) => {
+    windowsPlatform[client].addLink = `${addLinkPrefix}${windowsPlatform[client].addLink}`;
   });
 }
-
-// function setLink(linkElem, link) {
-//   if (isTelegramMiniApp()) {
-//     linkElem.onclick = function (ev) {
-//       ev.preventDefault();
-
-//       const secureRedirectUrl = link.replace("incy://", "https://whitenet.online");
-
-//       window.Telegram.WebApp.openLink(secureRedirectUrl);
-//     };
-//   } else {
-//     linkElem.href = link;
-//   }
-// }
 
 function setLink(linkElem, link) {
   if (isTelegramMiniApp()) {
     linkElem.onclick = function (ev) {
       ev.preventDefault();
-      window.Telegram.WebApp.openLink(link, { try_instant_view: false });
+
+      const win = window.open(link, "_system");
+      if (!win || win.closed) {
+        window.open(link, "_blank");
+      }
     };
   } else {
     linkElem.href = link;
   }
+}
+
+function getPlatform() {
+  const ua = navigator.userAgent.toLowerCase();
+
+  // 1. Проверяем ТВ-платформы
+  if (ua.includes("tv")) {
+    if (ua.includes("apple")) return "appletv";
+    return "androidtv"; // Для всех остальных ТВ (smarttv, googletv, androidtv)
+  }
+
+  // Отдельно ловим редкие Android TV, у которых нет слова "tv", но есть "large-screen"
+  if (ua.includes("android") && ua.includes("large-screen")) {
+    return "androidtv";
+  }
+
+  // 2. Мобильные платформы
+  // Проверка на iPad/iPhone/iPod
+  if (/iphone|ipad|ipod/.test(ua)) return "ios";
+  // Отдельная проверка для новых iPad на iPadOS (они маскируются под Mac)
+  if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && ua.includes("macintosh"))
+    return "ios";
+
+  if (ua.includes("android")) return "android";
+
+  // 3. Десктопные платформы
+  if (ua.includes("win")) return "windows";
+  if (ua.includes("mac")) return "macos";
+  if (ua.includes("linux")) return "linux";
+
+  return "ios"; // Если платформу определить не удалось
+}
+
+function initCurrentClient(instructions_, platform, preferredClient) {
+  const hasPreferredClient = instructions_[platform][preferredClient];
+  if (hasPreferredClient) return preferredClient;
+
+  return Object.keys(instructions_[platform])[0];
 }
