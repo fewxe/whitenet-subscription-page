@@ -38,7 +38,7 @@ const expiryDateElem = document.getElementById("expiryDate");
 expiryDateElem.textContent = `до ${dayMonth}, ${year}`;
 
 const expiredInElem = document.getElementById("expiredIn");
-expiredInElem.textContent = user.days_left.toString();
+expiredInElem.textContent = user.days_left < 0 ? 0 : user.days_left.toString();
 
 const trafficUsedElem = document.getElementById("trafficUsed");
 trafficUsedElem.textContent = user.traffic_used;

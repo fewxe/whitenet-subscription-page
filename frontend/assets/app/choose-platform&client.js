@@ -672,10 +672,7 @@ function setLink(linkElem, link) {
     linkElem.onclick = function (ev) {
       ev.preventDefault();
 
-      const win = window.open(link, "_system");
-      if (!win || win.closed) {
-        window.open(link, "_blank");
-      }
+      window.open(link, "_system");
     };
   } else {
     linkElem.href = link;
