@@ -12,6 +12,7 @@ from src.domain.exceptions import (
     SubscriptionProviderUnavailableError,
 )
 from src.domain.services import extract_client_ip, filter_forwarded_headers, is_vpn_client
+from src.domain.value_objects import ShortUuid
 
 router = APIRouter(route_class=DishkaRoute)
 
@@ -23,7 +24,7 @@ async def robots_txt() -> PlainTextResponse:
 
 @router.get("/{short_uuid}", response_model=None)
 async def entrypoint(
-    short_uuid: str,
+    short_uuid: ShortUuid,
     request: Request,
     subscription_use_case: FromDishka[GetSubscription],
     info_use_case: FromDishka[GetSubscriptionInfo],

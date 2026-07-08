@@ -8,13 +8,14 @@ from src.domain.exceptions import (
     SubscriptionProviderUnavailableError,
 )
 from src.domain.models import SubscriptionInfo
+from src.domain.value_objects import ShortUuid
 
 
 class GetSubscriptionInfo:
     def __init__(self, gateway: SubscriptionGateway):
         self.gateway = gateway
 
-    async def execute(self, short_uuid: str) -> SubscriptionInfo:
+    async def execute(self, short_uuid: ShortUuid) -> SubscriptionInfo:
         try:
             info = await self.gateway.fetch_info(short_uuid)
         except (SubscriptionProviderUnavailableError, SubscriptionProviderResponseError):
@@ -32,7 +33,7 @@ class GetSubscription:
     def __init__(self, gateway: SubscriptionGateway):
         self.gateway = gateway
 
-    async def execute(self, short_uuid: str, headers: dict[str, str]) -> RawSubscriptionPayload:
+    async def execute(self, short_uuid: ShortUuid, headers: dict[str, str]) -> RawSubscriptionPayload:
         logger.info(
             f"Subscription requested: short_uuid={short_uuid}, "
             f"ip={headers.get('x-remnawave-real-ip', '-')}, "

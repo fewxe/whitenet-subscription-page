@@ -9,6 +9,7 @@ from src.domain.exceptions import (
     SubscriptionProviderUnavailableError,
 )
 from src.domain.models import SubscriptionInfo
+from src.domain.value_objects import ShortUuid
 from src.infrastructure.mappers import parse_subscription_info
 from src.setup.config import AppConfig
 
@@ -26,7 +27,7 @@ class RemnawaveGateway:
         self._http = http_client
         self._settings = settings
 
-    async def fetch_info(self, short_uuid: str) -> SubscriptionInfo:
+    async def fetch_info(self, short_uuid: ShortUuid) -> SubscriptionInfo:
         logger.debug(f"Fetching subscription info for short_uuid={short_uuid}")
 
         try:
@@ -37,32 +38,24 @@ class RemnawaveGateway:
             logger.warning(f"Timeout fetching info for short_uuid={short_uuid}: {exc}")
             raise SubscriptionProviderUnavailableError(short_uuid, "timeout") from exc
         except httpx.HTTPStatusError as exc:
-            logger.warning(
-                f"Remnawave returned {exc.response.status_code} for info, short_uuid={short_uuid}"
-            )
-            raise SubscriptionProviderResponseError(
-                short_uuid, f"status {exc.response.status_code}"
-            ) from exc
+            logger.warning(f"Remnawave returned {exc.response.status_code} for info, short_uuid={short_uuid}")
+            raise SubscriptionProviderResponseError(short_uuid, f"status {exc.response.status_code}") from exc
         except httpx.HTTPError as exc:
             logger.error(f"Network error fetching info for short_uuid={short_uuid}: {exc}")
             raise SubscriptionProviderUnavailableError(short_uuid, str(exc)) from exc
         except json.JSONDecodeError as exc:
-            logger.error(
-                f"Invalid JSON from remnawave for short_uuid={short_uuid}: body={r.text!r}"
-            )
+            logger.error(f"Invalid JSON from remnawave for short_uuid={short_uuid}: body={r.text!r}")
             raise SubscriptionProviderResponseError(short_uuid, "invalid JSON response") from exc
 
         return parse_subscription_info(payload, short_uuid)
 
     async def fetch_subscription(
         self,
-        short_uuid: str,
+        short_uuid: ShortUuid,
         *,
         headers: dict[str, str] | None = None,
     ) -> RawSubscriptionPayload:
-        logger.debug(
-            f"Proxying subscription request for short_uuid={short_uuid}, headers={headers}"
-        )
+        logger.debug(f"Proxying subscription request for short_uuid={short_uuid}, headers={headers}")
 
         try:
             r = await self._http.get(f"/api/sub/{short_uuid}", headers=headers or {})

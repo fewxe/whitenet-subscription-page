@@ -1,10 +1,11 @@
 from pydantic import BaseModel
 
 from src.domain.models import TrafficLimitStrategy, UserStatus
+from src.domain.value_objects import ShortUuid
 
 
 class SubscriptionUserOut(BaseModel):
-    short_uuid: str
+    short_uuid: ShortUuid
     username: str
 
     days_left: int
