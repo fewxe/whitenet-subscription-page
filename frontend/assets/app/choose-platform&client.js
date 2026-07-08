@@ -1,5 +1,14 @@
 import getUser from "./get-user.js";
 
+
+if (
+    typeof window !== "undefined" &&
+    window.Telegram?.WebApp
+) {
+    window.Telegram.WebApp.expand();
+    window.Telegram.WebApp.disableVerticalSwipes?.();
+}
+
 const platformAlias = {
   ios: "IOS",
   android: "Android",
